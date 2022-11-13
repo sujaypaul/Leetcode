@@ -1,47 +1,18 @@
-class Solution {
-  public String reverseWords(String s) {
-    StringBuilder sb = new StringBuilder(s).reverse(); // Reverse the whole string
-    reverseWords(sb, sb.length());                     // Reverse each word
-    return cleanSpaces(sb, sb.length());               // Clean up spaces
-  }
+public class Solution {
+    public String reverseWords(String s) {
+        StringBuilder sb = new StringBuilder();
+        for(int i= s.length()-1; i>=0; i--){
+            while(i>=0 && s.charAt(i) == ' ') i--;
+            if(i < 0) break;
+            /* if sb is empty, which means it is first word met, simple skip, and if it is               not, when we reach here, the string is not done processing, so append a space.
+            */
+            if(sb.length() != 0) sb.append(' ');
+            StringBuilder w = new StringBuilder();
+            /* Add the string in reverse order. */
+            while(i>=0 && s.charAt(i) != ' ') w.append(s.charAt(i--));
+            sb.append(w.reverse());
+        }
 
-  private void reverseWords(StringBuilder sb, int n) {
-    int i = 0;
-    int j = 0;
-
-    while (i < n) {
-      while (i < j || i < n && sb.charAt(i) == ' ') // Skip spaces
-        ++i;
-      while (j < i || j < n && sb.charAt(j) != ' ') // Skip non spaces
-        ++j;
-      reverse(sb, i, j - 1); // Reverse the word
+        return sb.toString();
     }
-  }
-
-  // Trim leading, trailing, and middle spaces
-  private String cleanSpaces(StringBuilder sb, int n) {
-    int i = 0;
-    int j = 0;
-
-    while (j < n) {
-      while (j < n && sb.charAt(j) == ' ') // Skip spaces
-        ++j;
-      while (j < n && sb.charAt(j) != ' ') // Keep non spaces
-        sb.setCharAt(i++, sb.charAt(j++));
-      while (j < n && sb.charAt(j) == ' ') // Skip spaces
-        ++j;
-      if (j < n) // Keep only one space
-        sb.setCharAt(i++, ' ');
-    }
-
-    return sb.substring(0, i).toString();
-  }
-
-  private void reverse(StringBuilder sb, int l, int r) {
-    while (l < r) {
-      final char temp = sb.charAt(l);
-      sb.setCharAt(l++, sb.charAt(r));
-      sb.setCharAt(r--, temp);
-    }
-  }
 }
