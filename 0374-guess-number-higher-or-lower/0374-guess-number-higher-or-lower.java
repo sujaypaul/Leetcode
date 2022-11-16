@@ -15,7 +15,7 @@ public class Solution extends GuessGame {
 
         // Find the first guess num that >= target num
         while (l < r) {
-            int m = l + (r - l) / 2;
+            final int m = l + (r - l) / 2;
             if (guess(m) <= 0) // -1, 0
                 r = m;
             else
