@@ -3,7 +3,7 @@ class Solution {
         if( n == 0 )
             return false;
         
-        for (int prime : new int[] {2,3,5})
+        for ( final int prime : new int[] {2,3,5})
             while(n%prime == 0)
                 n/=prime;
             
