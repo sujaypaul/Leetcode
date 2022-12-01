@@ -3,16 +3,10 @@ class Solution {
         int l=0;
         int r=0;
         for(int i=0,j=s.length()-1;i<j;i++,j--){
-            if(s.charAt(i)=='a'||s.charAt(i)=='A'||s.charAt(i)=='e'||s.charAt(i)=='E'
-               ||s.charAt(i)=='i'||s.charAt(i)=='I'
-               ||s.charAt(i)=='o'||s.charAt(i)=='O'
-               ||s.charAt(i)=='u'||s.charAt(i)=='U')
+            if( isVowel(s.charAt(i)) )
                 l++;
             
-            if(s.charAt(j)=='a'||s.charAt(j)=='A'||s.charAt(j)=='e'||s.charAt(j)=='E'
-               ||s.charAt(j)=='i'||s.charAt(j)=='I'
-               ||s.charAt(j)=='o'||s.charAt(j)=='O'
-               ||s.charAt(j)=='u'||s.charAt(j)=='U')
+            if( isVowel(s.charAt(j)) )
                 r++;
         }
         if(l==r)
@@ -20,5 +14,15 @@ class Solution {
         
         return false;
         
+    }
+    
+    public boolean isVowel(char i){
+        if(i=='a'||i=='A'||i=='e'||i=='E'
+               ||i=='i'||i=='I'
+               ||i=='o'||i=='O'
+               ||i=='u'||i=='U')
+            return true;
+        else
+        return false;
     }
 }
