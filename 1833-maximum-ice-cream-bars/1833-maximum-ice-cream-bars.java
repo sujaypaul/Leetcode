@@ -1,13 +1,35 @@
 class Solution {
     public int maxIceCream(int[] costs, int coins) {
-        Arrays.sort(costs);
+        int maxCost = 0;
 
-        for (int i = 0; i < costs.length; ++i)
-            if (coins >= costs[i])
-                coins -= costs[i];
-            else
-                return i;
+        for (int cost : costs) {
+            if (cost > maxCost) {
+                maxCost = cost;
+            }
+        }
 
-        return costs.length;
+        int[] numOfCosts = new int[maxCost + 1];
+
+        for (int cost : costs) {
+            numOfCosts[cost]++;
+        }
+
+        int iceCreamBars = 0;
+
+        for (int cost = 1; cost <= maxCost; cost++) {
+            if (numOfCosts[cost] == 0) {
+                continue;
+            }
+
+            if (coins < cost) {
+                break;
+            }
+
+            int count = Math.min(numOfCosts[cost], coins / cost);
+            coins -= count * cost;
+            iceCreamBars += count;
+        }
+
+        return iceCreamBars;
     }
 }
