@@ -1,26 +1,44 @@
 class Solution {
     public int closestMeetingNode(int[] edges, int node1, int node2) {
-        final int n = edges.length;
-        final Integer[] m1 = new Integer[n];
-        final Integer[] m2 = new Integer[n];
-        dfs(edges, m1, node1);
-        dfs(edges, m2, node2);
-        int index = -1;
-        int dist = Integer.MAX_VALUE;
-        for (int i = 0; i < n; i++) {
-            if (m1[i] != null && m2[i] != null && dist > Math.max(m1[i], m2[i])) {
-                dist = Math.max(m1[i], m2[i]);
-                index = i;
+        if (edges == null || edges.length < 2) {
+            return -1;
+        }
+
+        int len = edges.length;
+        int[] visit1 = new int[len];
+        int[] visit2 = new int[len];
+
+        int res = len;
+        while (node1 != -1 || node2 != -1) {
+            if (node1 != -1) {
+                if (visit2[node1] == 1) {
+                    res = Math.min(res, node1);
+                }
+
+                if (visit1[node1] == 1) {
+                    node1 = -1;
+                } else {
+                    visit1[node1] = 1;
+                    node1 = edges[node1];
+                }
+            }
+            if (node2 != -1) {
+                if (visit1[node2] == 1) {
+                    res = Math.min(res, node2);
+                }
+                if (visit2[node2] == 1) {
+                    node2 = -1;
+                } else {
+                    visit2[node2] = 1;
+                    node2 = edges[node2];
+                }
+            }
+
+            if (res < len) {
+                return res;
             }
         }
-        return index;
-    }
 
-    private void dfs(int[] edges, Integer[] memo, int node) {
-        int dist = 0;
-        while (node != -1 && memo[node] == null) {
-            memo[node] = dist++;
-            node = edges[node];
-        }
+        return -1;
     }
 }
