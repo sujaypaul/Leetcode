@@ -25,23 +25,39 @@
      */
 class Solution {
   public TreeNode sortedListToBST(ListNode head) {
-    List<Integer> A = new ArrayList<>();
-
-    // Construct the array
-    for (ListNode curr = head; curr != null; curr = curr.next)
-      A.add(curr.val);
-
-    return helper(A, 0, A.size() - 1);
+    this.head = head;
+    return helper(0, getLength(head) - 1);
   }
 
-  private TreeNode helper(List<Integer> A, int l, int r) {
+  private ListNode head;
+
+  private TreeNode helper(int l, int r) {
     if (l > r)
       return null;
 
     final int m = (l + r) / 2;
-    TreeNode root = new TreeNode(A.get(m));
-    root.left = helper(A, l, m - 1);
-    root.right = helper(A, m + 1, r);
+
+    // Simulate inorder traversal: recursively form the left half
+    TreeNode left = helper(l, m - 1);
+
+    // Once left half is traversed, process the current node
+    TreeNode root = new TreeNode(head.val);
+    root.left = left;
+
+    // Maintain the invariance
+    head = head.next;
+
+    // Simulate inorder traversal: recursively form the right half
+    root.right = helper(m + 1, r);
+
     return root;
   }
+
+  private int getLength(ListNode head) {
+    int length = 0;
+    for (ListNode curr = head; curr != null; curr = curr.next)
+      ++length;
+    return length;
+  }
 }
+
