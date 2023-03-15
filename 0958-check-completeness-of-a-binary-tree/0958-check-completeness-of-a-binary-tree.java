@@ -15,20 +15,23 @@
  */
 class Solution {
   public boolean isCompleteTree(TreeNode root) {
+    final int count = getCount(root);
+    return validIndex(root, 1, count);
+  }
+
+  private int getCount(TreeNode root) {
+    if (root == null)
+      return 0;
+    return 1 + getCount(root.left) + getCount(root.right);
+  }
+
+  // Make sure no index is > the # of nodes
+  private boolean validIndex(TreeNode root, int index, int count) {
     if (root == null)
       return true;
-
-    Queue<TreeNode> q = new LinkedList<>(Arrays.asList(root));
-
-    while (q.peek() != null) {
-      TreeNode node = q.poll();
-      q.offer(node.left);
-      q.offer(node.right);
-    }
-
-    while (!q.isEmpty() && q.peek() == null)
-      q.poll();
-
-    return q.isEmpty();
+    if (index > count)
+      return false;
+    return validIndex(root.left, index * 2, count) && validIndex(root.right, index * 2 + 1, count);
   }
 }
+
