@@ -22,22 +22,17 @@ class Solution {
   public Node cloneGraph(Node node) {
     if (node == null)
       return null;
+    if (map.containsKey(node))
+      return map.get(node);
 
-    Queue<Node> q = new ArrayDeque<>(Arrays.asList(node));
-    Map<Node, Node> map = new HashMap<>();
-    map.put(node, new Node(node.val));
+    Node newNode = new Node(node.val);
+    map.put(node, newNode);
 
-    while (!q.isEmpty()) {
-      Node u = q.poll();
-      for (Node v : u.neighbors) {
-        if (!map.containsKey(v)) {
-          map.put(v, new Node(v.val));
-          q.offer(v);
-        }
-        map.get(u).neighbors.add(map.get(v));
-      }
-    }
+    for (Node neighbor : node.neighbors)
+      newNode.neighbors.add(cloneGraph(neighbor));
 
-    return map.get(node);
+    return newNode;
   }
+
+  private Map<Node, Node> map = new HashMap<>();
 }
