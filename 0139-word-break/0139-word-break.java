@@ -1,27 +1,19 @@
 class Solution {
   public boolean wordBreak(String s, List<String> wordDict) {
-    return wordBreak(s, new HashSet<>(wordDict), new HashMap<>());
+    return wordBreak(s, 0, new HashSet<>(wordDict), new Boolean[s.length()]);
   }
 
-  private boolean wordBreak(final String s, Set<String> wordSet, Map<String, Boolean> memo) {
-    if (memo.containsKey(s))
-      return memo.get(s);
-    if (wordSet.contains(s)) {
-      memo.put(s, true);
+  // Returns true if s[i:] can be segmented.
+  private boolean wordBreak(final String s, int i, Set<String> wordSet, Boolean[] memo) {
+    if (i == s.length())
       return true;
-    }
+    if (memo[i] != null)
+      return memo[i];
 
-    // 1 <= prefix.length() < s.length()
-    for (int i = 1; i < s.length(); ++i) {
-      final String prefix = s.substring(0, i);
-      final String suffix = s.substring(i);
-      if (wordSet.contains(prefix) && wordBreak(suffix, wordSet, memo)) {
-        memo.put(s, true);
-        return true;
-      }
-    }
+    for (int j = i + 1; j <= s.length(); ++j)
+      if (wordSet.contains(s.substring(i, j)) && wordBreak(s, j, wordSet, memo))
+        return memo[i] = true;
 
-    memo.put(s, false);
-    return false;
+    return memo[i] = false;
   }
 }
