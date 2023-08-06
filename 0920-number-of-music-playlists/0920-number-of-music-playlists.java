@@ -1,28 +1,17 @@
 class Solution {
   public int numMusicPlaylists(int n, int goal, int k) {
-    this.n = n;
-    this.k = k;
+    final int kMod = 1_000_000_007;
     // dp[i][j] := # of playlists with i songs and j different songs
-    dp = new long[goal + 1][n + 1];
-    Arrays.stream(dp).forEach(row -> Arrays.fill(row, -1));
-    return (int) playlists(goal, n);
-  }
+    long[][] dp = new long[goal + 1][n + 1];
+    dp[0][0] = 1;
 
-  private static final int kMod = 1_000_000_007;
-  private int n;
-  private int k;
-  private long[][] dp;
+    for (int i = 1; i <= goal; ++i)
+      for (int j = 1; j <= n; ++j) {
+        dp[i][j] += dp[i - 1][j - 1] * (n - (j - 1));  // Last song is new
+        dp[i][j] += dp[i - 1][j] * Math.max(0, j - k); // Last song is old
+        dp[i][j] %= kMod;
+      }
 
-  private long playlists(int i, int j) {
-    if (i == 0)
-      return j == 0 ? 1 : 0;
-    if (j == 0)
-      return 0;
-    if (dp[i][j] >= 0)
-      return dp[i][j];
-
-    dp[i][j] = playlists(i - 1, j - 1) * (n - (j - 1));   // Last song is new
-    dp[i][j] += playlists(i - 1, j) * Math.max(0, j - k); // Last song is old
-    return dp[i][j] %= kMod;
+    return (int) dp[goal][n];
   }
 }
