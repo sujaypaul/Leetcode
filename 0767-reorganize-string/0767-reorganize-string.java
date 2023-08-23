@@ -1,41 +1,37 @@
-class Solution {
+public class Solution {
   public String reorganizeString(String s) {
-    final int n = s.length();
-    int[] count = new int[128];
-    char maxChar = 'a' - 1;
+    Map<Character, Integer> count = new HashMap<>();
+    int maxFreq = 0;
 
     for (final char c : s.toCharArray())
-      ++count[c];
+      maxFreq = Math.max(maxFreq, count.merge(c, 1, Integer::sum));
 
-    for (char c = 'a'; c <= 'z'; ++c)
-      if (count[c] > count[maxChar])
-        maxChar = c;
-
-    if (count[maxChar] > (n + 1) / 2)
+    if (maxFreq > (s.length() + 1) / 2)
       return "";
 
-    char[] ans = new char[n];
+    StringBuilder sb = new StringBuilder();
+    // (freq, c)
+    Queue<Pair<Integer, Character>> maxHeap =
+        new PriorityQueue<>((a, b) -> b.getKey() - a.getKey());
+    int prevFreq = 0;
+    char prevChar = '@';
 
-    // Fill in 0, 2, 4, ... indices with the maxCount char.
-    while (count[maxChar]-- > 0)
-      fillIn(ans, maxChar);
+    for (final char c : count.keySet())
+      maxHeap.offer(new Pair<>(count.get(c), c));
 
-    // Fill in remaining characters.
-    for (char c = 'a'; c <= 'z'; ++c)
-      while (count[c] > 0) {
-        --count[c];
-        fillIn(ans, c);
-      }
+    while (!maxHeap.isEmpty()) {
+      // Get the most freq letter.
+      final int freq = maxHeap.peek().getKey();
+      final char c = maxHeap.poll().getValue();
+      sb.append(c);
+      // Add the previous letter back so that any two adjacent characters are
+      // not the same.
+      if (prevFreq > 0)
+        maxHeap.offer(new Pair<>(prevFreq, prevChar));
+      prevFreq = freq - 1;
+      prevChar = c;
+    }
 
-    return new String(ans);
-  }
-
-  private int i = 0; // ans's index
-
-  private void fillIn(char[] ans, char c) {
-    ans[i] = c;
-    i += 2;
-    if (i >= ans.length) // Out of bound, reset the index to 1.
-      i = 1;
+    return sb.toString();
   }
 }
