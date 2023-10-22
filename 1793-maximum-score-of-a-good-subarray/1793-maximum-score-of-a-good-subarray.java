@@ -1,17 +1,23 @@
 class Solution {
-  // Similar to 84. Largest Rectangle in Histogram
   public int maximumScore(int[] nums, int k) {
-    int ans = 0;
-    Deque<Integer> stack = new ArrayDeque<>();
+    final int n = nums.length;
+    int ans = nums[k];
+    int min = nums[k];
+    int i = k;
+    int j = k;
 
-    for (int i = 0; i <= nums.length; ++i) {
-      while (!stack.isEmpty() && (i == nums.length || nums[stack.peek()] > nums[i])) {
-        final int h = nums[stack.pop()];
-        final int w = stack.isEmpty() ? i : i - stack.peek() - 1;
-        if ((stack.isEmpty() || stack.peek() + 1 <= k) && i - 1 >= k)
-          ans = Math.max(ans, h * w);
-      }
-      stack.push(i);
+    // Greedily expand the window and decrease min as slow as possible (ASAP).
+    while (i > 0 || j < n - 1) {
+      if (i == 0)
+        ++j;
+      else if (j == n - 1)
+        --i;
+      else if (nums[i - 1] < nums[j + 1])
+        ++j;
+      else
+        --i;
+      min = Math.min(min, Math.min(nums[i], nums[j]));
+      ans = Math.max(ans, min * (j - i + 1));
     }
 
     return ans;
