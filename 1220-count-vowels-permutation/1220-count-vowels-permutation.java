@@ -9,15 +9,15 @@ class Solution {
         // a:0, e:1, i:2, o:3, u:4
         for(int i=1;i<n;i++){
             // e,i,u->a
-            dp[i][0] = (dp[i-1][1]) % MOD;
+            dp[i][0] = (dp[i-1][1]+dp[i-1][2]+dp[i-1][4]) % MOD;
             // a,i->e
             dp[i][1] = (dp[i-1][0] + dp[i-1][2]) % MOD;
             // e,o->i
-            dp[i][2] = (dp[i-1][0] + dp[i-1][1] + dp[i-1][3] + dp[i-1][4]) % MOD;
+            dp[i][2] = (dp[i-1][1] + dp[i-1][3]) % MOD;
             // i->o
-            dp[i][3] = (dp[i-1][2] + dp[i-1][4]) % MOD;
+            dp[i][3] = (dp[i-1][2]) % MOD;
             // i->u
-            dp[i][4] = (dp[i-1][0]) % MOD;
+            dp[i][4] = (dp[i-1][2]+dp[i-1][3]) % MOD;
         }
         long count = 0;
         for(int col=0;col<5;col++)
